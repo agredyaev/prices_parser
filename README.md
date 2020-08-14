@@ -27,7 +27,8 @@ Usage
 1. Install Docker
 2. Configure [docker-rotating-proxy](https://github.com/mattes/rotating-proxy)
 3. Configure db connection properties in __config.py__
-4. Start 
+4. Start docker container: docker run -d -p 5566:5566 -p 4444:4444 --env tors=25 mattes/rotating-proxy
+5. Start program: python main.py 
 
 
 Further Readings

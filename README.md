@@ -1,6 +1,6 @@
 prices_parser
 =====================
-__Getting compatitors prises from **masked** website__
+__Getting compatitors prises from X website__
 
 Why
 -----

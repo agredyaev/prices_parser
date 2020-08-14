@@ -24,6 +24,10 @@ Logging is performed for debugging.
 
 Usage
 ------
+1. Install Docker
+2. Configure [docker-rotating-proxy](https://github.com/mattes/rotating-proxy)
+3. Configure db connection properties in __config.py__
+4. Start 
 
 
 Further Readings

@@ -13,6 +13,7 @@ Stack
     - Web page navigation, grab data from HTML
 * [docker-rotating-proxy](https://github.com/mattes/rotating-proxy)
     - Lots of IP addresses for one single endpoint.
+* PostgreSQL
 
 Operation process
 -----------------

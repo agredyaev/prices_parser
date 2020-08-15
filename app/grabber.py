@@ -1,7 +1,7 @@
 import logging
-from driver import *
+from driver import Driver, EC, WebDriverException
 from time import sleep
-from exceptions import *
+from exceptions import NoItemsFound
 from datetime import date
 from config import Config
 from collections import OrderedDict
@@ -16,7 +16,7 @@ file_handler.setFormatter(formatter)
 logger.addHandler(file_handler)
 
 
-def make_links(names):
+def make_links(names: list) -> list:
     return [f'{Config.BASE_URL}{city}/retailers' for city in names]
 
 
@@ -28,16 +28,19 @@ class InputMaker:
 
     def __init__(self, url):
         self.url = url
+        self.timeout = 0.05
 
     def __get_links_and_number_offers(self):
         with Driver(options=Config.FLAGS) as driver:
             driver.load_url(self.url, wait_on_page=2,
                             wait_for_page_body=True)
             selector = (
-                '//*[@class="p-retailers__retailer p-retailers__retailer_empty_false"]'
+                '//*[@class="p-retailers__retailer \
+                    p-retailers__retailer_empty_false"]'
             )
             elements = driver.find_it_by(
-                selector, expected_condition=EC.presence_of_all_elements_located,
+                selector,
+                expected_condition=EC.presence_of_all_elements_located,
                 timeout=10)
 
             hrefs = (elem.get_attribute('href') for elem in elements)
@@ -46,7 +49,7 @@ class InputMaker:
 
             return list(zip(hrefs, offers))
 
-    def make_input(self):
+    def make_input(self) -> list:
         input = []
 
         for href, num in self.__get_links_and_number_offers():
@@ -70,11 +73,11 @@ class InputParser():
             expected_condition=EC.visibility_of_all_elements_located,
             timeout=30)
 
-    def __parse_segment(self, string):
+    def __parse_segment(self, string: str) -> str:
         chars = ((f'/{a}' if a.isupper() else a) for a in string)
         return ''.join(chars).split('/')[1:]
 
-    def __get_offer_data(self):
+    def __get_offer_data(self) -> tuple:
         retailer = self.driver.find_it_by(
             '//a[@class="p-offer__retailer"]',
             timeout=10).get_attribute('href').split('/')
@@ -85,19 +88,19 @@ class InputParser():
 
         try:
             price_old = self.driver.find_it_by(
-                '//*[@class="p-offer__price-old"]', timeout=0.05).text
+                '//*[@class="p-offer__price-old"]', timeout=self.timeout).text
         except Exception:
             price_old = ''
 
         try:
             discount = self.driver.find_it_by(
-                '//*[@class="p-offer__discount"]', timeout=0.05).text
+                '//*[@class="p-offer__discount"]', timeout=self.timeout).text
         except Exception:
             discount = ''
 
         try:
             qty = self.driver.find_it_by(
-                '//*[@class="p-offer__quantity"]', timeout=0.05).text
+                '//*[@class="p-offer__quantity"]', timeout=self.timeout).text
         except Exception:
             qty = ''
 
@@ -123,10 +126,10 @@ class InputParser():
         try:
             return self.driver.find_it_by('//*[@class="b-no-items__root"]',
                                           timeout=2).text
-        except:
+        except Exception:
             return ''
 
-    def get_data(self):
+    def get_data(self) -> list:
         data = []
         with self.driver as driver:
             driver.load_url(self.url, wait_on_page=1,
@@ -140,7 +143,7 @@ class InputParser():
                 for index in range(number_elements):
                     try:
                         elements = self.__get_elements()
-                        sleep(0.05)
+                        sleep(self.timeout)
                         elements[index].click()
                     except WebDriverException:
                         logger.exception(f'{self.url} failed to click element')

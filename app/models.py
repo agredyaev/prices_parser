@@ -1,5 +1,5 @@
-from peewee import *
 from confing import Config
+from peewee import Model, PostgresqlDatabase
 
 db = PostgresqlDatabase(database=Config.DATABASE_NAME,
                         user=Config.USER_NAME,

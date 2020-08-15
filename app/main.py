@@ -1,10 +1,10 @@
+import logging
 import argparse
-from models import *
-from grabber import *
 from tqdm import tqdm
-from config import Config
 from itertools import chain
+from models import Offers, FIELDS, db
 from multiprocessing import Pool, cpu_count
+from grabber import InputMaker, InputParser, make_links
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
@@ -23,7 +23,8 @@ def arg_parser():
     parser.add_argument('-e', '--elapsed', action='store_true',
                         default=False, help='to clean up elapsed links file')
     parser.add_argument('names', nargs='*',
-                        help='Availible options:moskva ekaterinburg ufa omsk voronezh kazan volgograd sankt-peterburg perm')
+                        help='Availible options:moskva ekaterinburg \
+                        ufa omsk voronezh kazan volgograd sankt-peterburg perm')
 
     args = parser.parse_args()
 
@@ -76,7 +77,7 @@ def get_unfinished(links):
 
 
 if __name__ == '__main__':
-        # print(*get_links())
+    # print(*get_links())
     db.connect()
     # tasks = get_unfinished(get_links())
     tasks = get_unfinished(links_from_file())

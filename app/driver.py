@@ -1,7 +1,5 @@
-import logging
 from time import sleep
 from config import Config
-from random import uniform
 from fake_useragent import UserAgent
 from selenium.webdriver.common.by import By
 from selenium.webdriver import ChromeOptions
@@ -11,19 +9,18 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.webdriver import WebDriver as ChromeDriver
 
 
-
 class Driver(ChromeDriver):
     """
     Extend ChromeDriver
-    Options:
-    h -headless
-    u -user-agent
-    p -proxy
-    w -windos-size
-    s -no-sandbox
-    g -disable-gpu
-    i -incognito
-    t -num-raster-threads
+    \n Options:
+    \n h -headless
+    \n u -user-agent
+    \n p -proxy
+    \n w -windos-size
+    \n s -no-sandbox
+    \n g -disable-gpu
+    \n i -incognito
+    \n t -num-raster-threads
     """
 
     def __init__(self, options=''):
@@ -53,6 +50,7 @@ class Driver(ChromeDriver):
 
     def setup_options(self):
         chrome_options = ChromeOptions()
+        chrome_options.headless = True
 
         flags = {'h': '--headless',
                  'u': f'user-agent={UserAgent().random}',
@@ -61,7 +59,7 @@ class Driver(ChromeDriver):
                  's': '--no-sandbox',
                  'g': '--disable-gpu',
                  'i': '--incognito',
-                 't': '--num-raster-threads=4',
+                 't': f'--num-raster-threads={Config.THREADS}',
                  '#': '--blink-settings=syncXHRInDocumentsEnabled=false',
                  '@': '--blink-settings=scriptEnabled=false',
                  '%': '--blink-settings=imagesEnabled=false',

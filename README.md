@@ -1,7 +1,7 @@
 prices_parser
 =====================
 
-Getting compatitors prises from X website
+Getting compatitors prices from X website
 
 Why
 -----
